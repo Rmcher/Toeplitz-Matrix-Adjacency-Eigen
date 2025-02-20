@@ -86,25 +86,30 @@ for idx = 1:length(n_values)
     An = A^n;
     perm_A_approx = An(1, 1);
     perm_approx_values(idx) = perm_A_approx;
-    fprintf('n=%d, perm_exact_values done; ', n);
+    
+    fprintf('n=%d, perm_approx_values done; ', n);
     drawnow;
     
     % Compute real permanent
     perm_A_exact = perm(ToeplitzA, n);
     perm_exact_values(idx) = perm_A_exact;
-    fprintf('perm_approx_values done; \n');
+    
+    fprintf('perm_exact_values done; lambda_values done\n');
     drawnow;
 end
 
 % Plot the results
 figure;
 hold on;
-plot(n_values, perm_exact_values, 'rx-', 'LineWidth', 2, 'MarkerSize', 10); % Exact Permanent
+plot(n_values, perm_exact_values, 'rx-', 'LineWidth', 2, 'MarkerSize', 8); % Exact Permanent
 plot(n_values, perm_approx_values, 'b^--', 'LineWidth', 2, 'MarkerSize', 8); % Approximate Permanent
 plot(n_values, lambda_values, 'gs-', 'LineWidth', 2, 'MarkerSize', 8); % Spectral Radius \lambda^n
 
+% Set log scale for Y-axis
+set(gca, 'YScale', 'log');
+
 xlabel('Matrix Size n', 'FontSize', 14);
-ylabel('Permanent Values', 'FontSize', 14);
+ylabel('Permanent Values (log scale)', 'FontSize', 14);
 legend({'Exact Permanent', 'Approximate Permanent (A^n(1,1))', 'Spectral Radius \lambda^n'}, ...
     'Location', 'NorthWest', 'FontSize', 12);
 title(sprintf('Comparison of Permanent Computation Methods (r=%d)', r), 'FontSize', 14);
@@ -119,7 +124,7 @@ if ~exist(results_folder, 'dir')
 end
 
 % Define the filename and save the figure
-filename = fullfile(results_folder, sprintf('perm_comparison_r%d_n%d-%d.fig', r, min(n_values), max(n_values)));
+filename = fullfile(results_folder, sprintf('perm_comparison_r%d_n%d-%d_log.fig', r, min(n_values), max(n_values)));
 savefig(filename);
 
 disp(['Plot saved as: ', filename]);
